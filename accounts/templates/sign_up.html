@@ -10,4 +10,14 @@
     {{ form.as_p }}
     <button type="submit" class="btn btn-primary">Cadastrar</button>
 </form>
+# if para teste de novo usuario
+
+{% if user_created %}
+    <div class="alert alert-success" role="alert">
+        O novo usuário foi criado com sucesso. Nome de usuário: {{ username }}, Senha: {{ password }}
+    </div>
+{% endif %}
+
+
+
 {% endblock %}
