@@ -37,7 +37,7 @@ class EncomendaForm(forms.ModelForm):
         fields = ['morador', 'descricao', 'data_hora_recebimento']
         labels = {'morador': 'Morador', 'descricao': 'Descrição', 'data_hora_recebimento': 'Data e hora de recebimento'}
         widgets = {'morador': forms.Select(attrs={'class': 'form-select'}),
-                   'descricao': forms.TextInput(attrs={'class': 'form-select'}),
+                   'descricao': forms.TextInput(attrs={'class': 'form-control'}),
                    'data_hora_recebimento': forms.DateTimeInput(),
                    }
     

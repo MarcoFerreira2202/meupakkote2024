@@ -27,10 +27,12 @@ urlpatterns = [
     path('minhas_encomendas/', app_meu_pacote_views.minhas_encomendas, name='minhas_encomendas'),
     path('encomendas_entregues/', app_meu_pacote_views.encomendas_entregues, name='encomendas_entregues'),
     path('cadastrar_encomenda/', app_meu_pacote_views.cadastrar_encomenda, name='cadastrar_encomenda'),
-    path('encomenda/<int:encomenda_id>', app_meu_pacote_views.encomenda, name='encomenda'),
+    path('encomenda/<int:encomenda_id>/', app_meu_pacote_views.encomenda, name='encomenda_url'),
     path('logout/', app_meu_pacote_views.logout_view, name='logout'),
     path('cadastrar_morador/', app_meu_pacote_views.cadastrar_morador, name='cadastrar_morador'),
     path('cadastrar_funcionario/', app_meu_pacote_views.cadastrar_funcionario, name='cadastrar_funcionario'),
     path('login/', accounts_views.login_view, name='login_view'),
     path('signup/', accounts_views.signup_view, name='signup_view'),
+    path('telainicial/', app_meu_pacote_views.encomenda, name='telainicial_url')
+
 ]

@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Erro</title>
+</head>
+<body>
+    <h1>Erro!</h1>
+    <p>A encomenda {{ encomenda.descricao }} foi baixada com sucesso.</p>
+  #  <a href="{% url 'encomenda_url' %}">Voltar</a>
+     <a href="{% url 'encomenda_url' encomenda_id=encomenda.id %}">Voltar</a>
+
+</body>
+</html>

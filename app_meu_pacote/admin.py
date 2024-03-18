@@ -20,7 +20,7 @@ admin.site.register(Morador, MoradorAdmin)
 
 class FuncionarioAdmin(admin.ModelAdmin):
     list_display = ('id', 'user','nomeF', 'condominio', 'funcaoFuncionario', 'email', 'telefone')
-    search_fields = ('user', 'nomeF', 'condominio_nome', 'funcaoFuncionario', 'email', 'telefone')
+    search_fields = ('user__username', 'nomeF', 'condominio__nome', 'funcaoFuncionario', 'email', 'telefone')
 admin.site.register(Funcionario, FuncionarioAdmin)
 
 class EncomendaAdmin(admin.ModelAdmin):

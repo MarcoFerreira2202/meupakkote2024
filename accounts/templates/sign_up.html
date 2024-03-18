@@ -6,18 +6,20 @@
 <h1>Cadastro de Novo Usuário</h1>
 
 <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Cadastrar</button>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Cadastrar</button>
 </form>
 # if para teste de novo usuario
+# acrescentando {% with user_created=True %} e {% endwith %}
 
+{% with user_created=True %}
 {% if user_created %}
-    <div class="alert alert-success" role="alert">
-        O novo usuário foi criado com sucesso. Nome de usuário: {{ username }}, Senha: {{ password }}
-    </div>
+    <div class="alert alert-success" role="alert">
+        O novo usuário foi criado com sucesso. Nome de usuário: {{ username }}, Senha: {{ password }}
+    </div>
 {% endif %}
-
-
+{% endwith %}
 
 {% endblock %}
+

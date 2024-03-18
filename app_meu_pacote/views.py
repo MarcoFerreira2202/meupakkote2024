@@ -6,6 +6,13 @@ from .models import Encomenda, Morador, Funcionario, Condominio
 from .forms import EncomendaForm, UserRegistrationForm, MoradorForm, FuncionarioForm, BaixaEncomendaForm
 import datetime
 
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, get_object_or_404, redirect
+from django.core.exceptions import ObjectDoesNotExist
+from .models import Encomenda, Funcionario
+from .forms import BaixaEncomendaForm
+
+
 # Create your views here.
 
 def index(request):
@@ -35,29 +42,49 @@ def encomendas_pendentes(request):
     return render(request, 'encomendas_pendentes.html', context)
 
 def encomenda(request, encomenda_id):
-    
-    if not request.user.is_authenticated:
-        return redirect('index') # issue ---> precisa redirecionar para a página de login
-    
     encomenda = get_object_or_404(Encomenda, id=encomenda_id)
 
     if request.method == 'POST':
         form = BaixaEncomendaForm(request.POST)
         if form.is_valid():
-            codigo_enviado = str(form.data['codigo_enviado'])
+            codigo_enviado = str(form.cleaned_data['codigo_enviado'])
             if codigo_enviado == encomenda.codigo_retirada:
-                encomenda.data_hora_entrega = datetime.datetime.now(tz=timezone.utc)
-                encomenda.funcionario_entrega = Funcionario.objects.get(user=request.user)
+                try:
+                    funcionario = Funcionario.objects.get(user=request.user)
+                except ObjectDoesNotExist:
+                    # Tratar o caso de o Funcionario não existir
+                    return render(request, 'error.html', {'message': 'Funcionário não encontrado.'})
+
+                encomenda.data_hora_entrega = timezone.now()
+                encomenda.funcionario_entrega = funcionario
                 encomenda.save()
-                msg = f'Encomenda "{encomenda.descricao}" para "{encomenda.morador}" baixada com sucesso!'
-                return render(request, 'encomenda.html',{'encomenda':encomenda,'msg': msg})
+                return render(request, 'confirmacao.html', {'encomenda': encomenda})
             else:
-                msg_error = 'Código informado é inválido!'
-                return render(request, 'encomenda.html', {'encomenda':encomenda,'msg_error': msg_error})
+                return render(request, 'encomenda.html', {'form': form, 'encomenda': encomenda, 'error': 'Código de retirada inválido.'})
     else:
-        encomenda = get_object_or_404(Encomenda, id=encomenda_id)
         form = BaixaEncomendaForm()
-        return render(request, 'encomenda.html', {'encomenda':encomenda,'form': form})
+        return render(request, 'encomenda.html', {'form': form, 'encomenda': encomenda})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def encomendas_entregues(request):
