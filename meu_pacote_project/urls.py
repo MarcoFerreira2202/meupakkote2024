@@ -14,13 +14,29 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 # from accounts import views
 from app_meu_pacote import views as app_meu_pacote_views
 from accounts import views as accounts_views
 
+# meu_app/urls.py
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+#from .views import CondominioViewSet, FuncionarioViewSet, EncomendaViewSet
+from app_meu_pacote.views import CondominioViewSet, FuncionarioViewSet, EncomendaViewSet
+
+
+router = DefaultRouter()
+router.register(r'condominios', CondominioViewSet)
+router.register(r'funcionarios', FuncionarioViewSet)
+router.register(r'encomendas', EncomendaViewSet)
+
+#urlpatterns = [
+#    path('api/', include(router.urls)),
+#]
 
 urlpatterns = [
+    path('api/', include(router.urls)),
     path('admin/', admin.site.urls),
     path('', app_meu_pacote_views.index, name='index'),
     path('encomendas_pendentes/', app_meu_pacote_views.encomendas_pendentes, name='encomendas_pendentes'),
@@ -33,6 +49,6 @@ urlpatterns = [
     path('cadastrar_funcionario/', app_meu_pacote_views.cadastrar_funcionario, name='cadastrar_funcionario'),
     path('login/', accounts_views.login_view, name='login_view'),
     path('signup/', accounts_views.signup_view, name='signup_view'),
-    path('telainicial/', app_meu_pacote_views.encomenda, name='telainicial_url')
-
+    path('telainicial/', app_meu_pacote_views.encomenda, name='telainicial_url'),
+    #path('', include('meu_app.urls')),  # Inclui as URLs do seu aplicativo
 ]

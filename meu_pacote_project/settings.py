@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'bootstrap4',
     'bootstrap5',
     'accounts',
+    'rest_framework',
 ]
 # adicionado app accounts - linha 42
 

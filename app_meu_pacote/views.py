@@ -11,6 +11,43 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.exceptions import ObjectDoesNotExist
 from .models import Encomenda, Funcionario
 from .forms import BaixaEncomendaForm
+# meu_app/views.py
+from rest_framework import viewsets
+from .models import Condominio, Funcionario, Encomenda
+from .serializers import CondominioSerializer, FuncionarioSerializer, EncomendaSerializer
+
+class CondominioViewSet(viewsets.ModelViewSet):
+    queryset = Condominio.objects.all()
+    serializer_class = CondominioSerializer
+
+class FuncionarioViewSet(viewsets.ModelViewSet):
+    queryset = Funcionario.objects.all()
+    serializer_class = FuncionarioSerializer
+
+class EncomendaViewSet(viewsets.ModelViewSet):
+    queryset = Encomenda.objects.all()
+    serializer_class = EncomendaSerializer
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # Create your views here.

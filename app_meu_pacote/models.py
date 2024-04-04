@@ -53,6 +53,11 @@ class Encomenda(models.Model):
     codigo_retirada = models.CharField(max_length=4, default='0000')
     funcionario_recebimento = models.ForeignKey(Funcionario, on_delete=models.CASCADE, related_name='funcionario_recebimento')
     funcionario_entrega = models.ForeignKey(Funcionario, on_delete=models.CASCADE, related_name='funcionario_entrega', blank=True, null=True)
+    # verificar a entrega de encomenda
+    
+    def foi_entregue(self):
+        """Retorna True se a encomenda foi entregue, False caso contrário."""
+        return self.data_hora_entrega is not None
     
     def __str__(self):
         return self.descricao
