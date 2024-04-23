@@ -1,0 +1,36 @@
+<! -- Página HTML para Buscar Encomendas -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Buscar Encomendas</title>
+</head>
+<body>
+    <h1>Buscar Encomendas</h1>
+    <button id="buscar">Buscar Minhas Encomendas</button>
+
+    <div id="resultados"></div>
+
+    <script>
+        document.getElementById('buscar').onclick = function() {
+            fetch('/api/encomendas/', {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Token ' + localStorage.getItem('token')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const resultados = document.getElementById('resultados');
+                resultados.innerHTML = '';
+                data.forEach(encomenda => {
+                    const div = document.createElement('div');
+                    div.textContent = `Descrição: ${encomenda.descricao} - Entregue: ${encomenda.entregue ? 'Sim' : 'Não'}`;
+                    resultados.appendChild(div);
+                });
+            });
+        };
+    </script>
+</body>
+</html>

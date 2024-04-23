@@ -9,12 +9,26 @@ import datetime
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.exceptions import ObjectDoesNotExist
-from .models import Encomenda, Funcionario
+from .models import Encomenda, Funcionario, Apartamento
 from .forms import BaixaEncomendaForm
 # meu_app/views.py
 from rest_framework import viewsets
 from .models import Condominio, Funcionario, Encomenda
 from .serializers import CondominioSerializer, FuncionarioSerializer, EncomendaSerializer
+# view para buscar encomendas
+from rest_framework.views import APIView
+from rest_framework.response import Response
+#from django.shortcuts import get_object_or_404
+# autenticação e autorização - proteção na classe Buscar encomendas
+from rest_framework.permissions import IsAuthenticated
+# view generica
+from django.views.generic import TemplateView
+# adicionando morador
+from .forms import MoradorRegistrationForm, MoradorForm
+from django import forms
+
+
+
 
 class CondominioViewSet(viewsets.ModelViewSet):
     queryset = Condominio.objects.all()
@@ -28,9 +42,58 @@ class EncomendaViewSet(viewsets.ModelViewSet):
     queryset = Encomenda.objects.all()
     serializer_class = EncomendaSerializer
 
+class BuscarEncomendas(APIView):
+    # templatename
+    template_name = 'buscar_encomendas.html'
+    permission_classes = [IsAuthenticated]
+    # O resto da sua view como definido anteriomente
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Adicione sua lógica para buscar encomendas aqui
+        return context
+    def get(self, request, *args, **kwargs):
+        morador = get_object_or_404(Morador, user=request.user)
+        encomendas = Encomenda.objects.filter(morador=morador)
+        serializer = EncomendaSerializer(encomendas, many=True)
+        return Response(serializer.data)
+
+#classe morador
+class MoradorForm(forms.ModelForm):
+    class Meta:
+        model = Morador
+        fields = ['user', 'nome', 'apartamento', 'email', 'telefone']
+
+    def save(self, commit=True):
+        morador = super().save(commit=False)
+        # certifique-se de que apartamento é fornecido ou trate de forma adequada
+        if self.cleaned_data['apartamento'] is None:
+            raise forms.ValidationError("Apartamento é necessário")
+        if commit:
+            morador.save()
+        return morador
+
+#ajuste APi
+def buscar_encomendas_page(request):
+    # Esta view é para renderizar a página HTML
+    return render(request, 'buscar_encomendas.html')
 
 
+#registro de morador
+def register_morador(request):
+    if request.method == 'POST':
+        form = MoradorRegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+    else:
+        form = MoradorRegistrationForm()
+    return render(request, 'register_morador.html', {'form': form})
 
+#renderizar views
+
+def my_view(request):
+    # Seu código aqui
+    return render(request, 'my_template.html', context)
 
 
 

@@ -32,17 +32,28 @@ class Apartamento(models.Model):
     def __str__(self):
         return f"{self.numero} ({self.condominio})"
     
+#class Morador(models.Model):
+#    id = models.AutoField(primary_key=True)
+#    user = models.OneToOneField(User, on_delete=models.CASCADE)
+#    nome = models.CharField(max_length=100)
+#    apartamento = models.ForeignKey(Apartamento, on_delete=models.CASCADE, related_name='apartamentos')
+#    email = models.EmailField()
+#    telefone = models.CharField(max_length=20)
+
+
+ #   def __str__(self):
+ #       return f'{self.nome} - {self.apartamento} - {self.apartamento.condominio}'
+ 
+#nova classe morador
 class Morador(models.Model):
-    id = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     nome = models.CharField(max_length=100)
-    apartamento = models.ForeignKey(Apartamento, on_delete=models.CASCADE, related_name='apartamentos')
+    apartamento = models.ForeignKey('Apartamento', on_delete=models.CASCADE, related_name='moradores')
     email = models.EmailField()
     telefone = models.CharField(max_length=20)
 
-
     def __str__(self):
-        return f'{self.nome} - {self.apartamento} - {self.apartamento.condominio}'
+        return self.nome 
     
 class Encomenda(models.Model):
     id = models.AutoField(primary_key=True)

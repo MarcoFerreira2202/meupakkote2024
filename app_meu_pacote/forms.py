@@ -91,3 +91,38 @@ class MoradorForm(forms.ModelForm):
         self.fields['user'].queryset = User.objects.exclude(id__in=existing_users).order_by('username')
 
 # formulario morador
+
+class MoradorRegistrationForm(UserCreationForm):
+    nome = forms.CharField(max_length=100)
+    email = forms.EmailField()
+    telefone = forms.CharField(max_length=20)
+
+    class Meta:
+        model = User
+        fields = ('username', 'password1', 'password2', 'email')
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.email = self.cleaned_data['email']
+        if commit:
+            user.save()
+            morador = Morador.objects.create(
+                user=user,
+                nome=self.cleaned_data['nome'],
+                email=self.cleaned_data['email'],
+                telefone=self.cleaned_data['telefone']
+            )
+        return user
+    
+def register_morador(request):
+    if request.method == 'POST':
+        form = MoradorForm(request.POST)
+        if form.is_valid():
+            apartamento = form.cleaned_data['apartamento']
+            morador = form.save(commit=False)
+            morador.apartamento = apartamento
+            morador.save()
+            return redirect('algum_url_de_sucesso')
+        else:
+            # Tratar o caso de form inválido
+            return render(request, 'register.html', {'form': form})
