@@ -88,8 +88,8 @@ class MoradorForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(MoradorForm, self).__init__(*args, **kwargs)
         #existing_users = Morador.objects.all().values_list('user', flat=True)
-        #self.fields['user'].queryset = User.objects.exclude(id__in=existing_users).order_by('username')
-        self.fields['apartamento'].queryset = Apartamento.objects.all()
+        self.fields['user'].queryset = User.objects.exclude(id__in=existing_users).order_by('username')
+
 # formulario morador
 
 class MoradorRegistrationForm(UserCreationForm):
@@ -99,7 +99,7 @@ class MoradorRegistrationForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('username', 'password1', 'password2', 'email')
+        fields = ('username', 'password1', 'password2', 'email',)
 
     def save(self, commit=True):
         user = super().save(commit=False)
