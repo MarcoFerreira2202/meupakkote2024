@@ -84,7 +84,14 @@ def register_morador(request):
         form = MoradorRegistrationForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('login')
+        #    return redirect('url_para_página_de_sucesso')
+        #else:
+            # Aqui é importante para ver os erros de validação
+        #    print(form.errors)
+#    else:
+#        form = MoradorForm()
+#    return render(request, 'register_morador.html', {'form': form})
+#           return redirect('login')
     else:
         form = MoradorRegistrationForm()
     return render(request, 'register_morador.html', {'form': form})

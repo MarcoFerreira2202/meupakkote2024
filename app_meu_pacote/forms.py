@@ -87,9 +87,9 @@ class MoradorForm(forms.ModelForm):
                     }
     def __init__(self, *args, **kwargs):
         super(MoradorForm, self).__init__(*args, **kwargs)
-        existing_users = Morador.objects.all().values_list('user', flat=True)
-        self.fields['user'].queryset = User.objects.exclude(id__in=existing_users).order_by('username')
-
+        #existing_users = Morador.objects.all().values_list('user', flat=True)
+        #self.fields['user'].queryset = User.objects.exclude(id__in=existing_users).order_by('username')
+        self.fields['apartamento'].queryset = Apartamento.objects.all()
 # formulario morador
 
 class MoradorRegistrationForm(UserCreationForm):
