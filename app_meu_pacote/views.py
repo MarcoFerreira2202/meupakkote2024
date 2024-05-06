@@ -3,7 +3,7 @@ from django.contrib.auth import login, authenticate, logout, login
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.utils import timezone
 from .models import Encomenda, Morador, Funcionario, Condominio
-from .forms import EncomendaForm, UserRegistrationForm, MoradorForm, FuncionarioForm, BaixaEncomendaForm
+from .forms import EncomendaForm, UserRegistrationForm, MoradorForm, FuncionarioForm, BaixaEncomendaForm, MoradorRegistrationForm
 import datetime
 
 from django.contrib.auth.decorators import login_required
@@ -79,30 +79,32 @@ def buscar_encomendas_page(request):
 
 
 #registro de morador
+
+
 def register_morador(request):
     if request.method == 'POST':
         form = MoradorRegistrationForm(request.POST)
         if form.is_valid():
-            form.save()
-        #    return redirect('url_para_página_de_sucesso')
-        #else:
-            # Aqui é importante para ver os erros de validação
-        #    print(form.errors)
-#    else:
-#        form = MoradorForm()
-#    return render(request, 'register_morador.html', {'form': form})
-#           return redirect('login')
+            user = form.save()  # Salva o usuário e retorna o objeto
+            morador = Morador(
+                user=user,
+                nome=form.cleaned_data['nome'],
+                email=form.cleaned_data['email'],
+                telefone=form.cleaned_data['telefone'],
+                apartamento=form.cleaned_data['apartamento']
+            )
+            morador.save()
+            return redirect('registro_sucesso.html')  # Ajuste para usar o nome correto da URL
     else:
         form = MoradorRegistrationForm()
-    return render(request, 'register_morador.html', {'form': form})
-
-#renderizar views
+    return render(request, 'register_morador.html', {'form': form})#renderizar views
 
 def my_view(request):
     # Seu código aqui
     return render(request, 'my_template.html', context)
 
-
+def registro_sucesso(request):
+    return render(request, 'registro_sucesso.html')
 
 
 

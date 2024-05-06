@@ -54,6 +54,7 @@ urlpatterns = [
     #path('api/encomendas/' BuscarEncomenadas.as_view())
     # view morador registro 
     path('register/', register_morador, name='register_morador'),
+    path('registro_sucesso/', app_meu_pacote_views.registro_sucesso, name='registro_sucesso'),
     path('admin/', admin.site.urls),
     path('', app_meu_pacote_views.index, name='index'),
     path('encomendas_pendentes/', app_meu_pacote_views.encomendas_pendentes, name='encomendas_pendentes'),

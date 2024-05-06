@@ -96,33 +96,44 @@ class MoradorRegistrationForm(UserCreationForm):
     nome = forms.CharField(max_length=100)
     email = forms.EmailField()
     telefone = forms.CharField(max_length=20)
+    apartamento = forms.ModelChoiceField(queryset=Apartamento.objects.all())
 
     class Meta:
         model = User
-        fields = ('username', 'password1', 'password2', 'email',)
+        fields = ('username', 'password1', 'password2', 'email', 'nome', 'telefone', 'apartamento')
 
     def save(self, commit=True):
         user = super().save(commit=False)
         user.email = self.cleaned_data['email']
         if commit:
             user.save()
-            morador = Morador.objects.create(
-                user=user,
-                nome=self.cleaned_data['nome'],
-                email=self.cleaned_data['email'],
-                telefone=self.cleaned_data['telefone']
-            )
-        return user
-    
+        return user    
+#def register_morador(request):
+#    if request.method == 'POST':
+#        form = MoradorForm(request.POST)
+#        if form.is_valid():
+#            apartamento = form.cleaned_data['apartamento']
+#            morador = form.save(commit=False)
+#            morador.apartamento = apartamento
+#            morador.save()
+#            return redirect('algum_url_de_sucesso')
+#        else:
+            # Tratar o caso de form inválido
+#            return render(request, 'register.html', {'form': form})
 def register_morador(request):
     if request.method == 'POST':
         form = MoradorForm(request.POST)
         if form.is_valid():
-            apartamento = form.cleaned_data['apartamento']
-            morador = form.save(commit=False)
-            morador.apartamento = apartamento
-            morador.save()
-            return redirect('algum_url_de_sucesso')
-        else:
-            # Tratar o caso de form inválido
-            return render(request, 'register.html', {'form': form})
+            morador = form.save(commit=False)  # Salva o Morador sem cometer no banco de dados
+            apartamento_id = form.cleaned_data.get('apartamento')  # Obtém o id do apartamento do form
+            if apartamento_id:
+                morador.apartamento = Apartamento.objects.get(id=apartamento_id)  # Atribui o objeto Apartamento ao morador
+                morador.save()  # Salva o Morador com o apartamento
+                return redirect('algum_url_de_sucesso')
+            else:
+                form.add_error('apartamento', 'Por favor, selecione um apartamento válido.')  # Adiciona erro se não houver apartamento selecionado
+        # Renderiza o formulário novamente com erros
+        return render(request, 'register_morador.html', {'form': form})
+    else:
+        form = MoradorForm()
+        return render(request, 'register_morador.html', {'form': form})
