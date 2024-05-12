@@ -2,58 +2,25 @@
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
 from django.urls import path, include
-# from accounts import views
 from app_meu_pacote import views as app_meu_pacote_views
 from accounts import views as accounts_views
-
-# meu_app/urls.py
-from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from rest_framework.authtoken import views
-#from .views import CondominioViewSet, FuncionarioViewSet, EncomendaViewSet
-from app_meu_pacote.views import CondominioViewSet, FuncionarioViewSet, EncomendaViewSet, BuscarEncomendas, buscar_encomendas_page
-#from app_meu_pacote.views import ObtainAuthToken
-#from app_meu_pacote.views import login_morador_page, my_login_view
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-# adicionando views
-#from . import views
-# adicionando view registro morador
-from app_meu_pacote.views import register_morador
+from rest_framework.authtoken.views import obtain_auth_token
 
 router = DefaultRouter()
-router.register(r'condominios', CondominioViewSet)
-router.register(r'funcionarios', FuncionarioViewSet)
-router.register(r'encomendas', EncomendaViewSet)
-
-#urlpatterns = [
-#    path('api/', include(router.urls)),
-#]
+router.register(r'condominios', app_meu_pacote_views.CondominioViewSet)
+router.register(r'funcionarios', app_meu_pacote_views.FuncionarioViewSet)
+router.register(r'encomendas', app_meu_pacote_views.EncomendaViewSet)
 
 urlpatterns = [
-    path('api-token-auth/', views.obtain_auth_token),
-    # adicionando view
-    #path('buscar_encomendas/', views.buscar_encomendas_view, name='buscar_encomendas'),
-    #path('buscar_encomendas/', app_meu_pacote_views.buscar_encomendas, name='buscar_encomendas'),
-    #path('login_morador/', login_morador_page, name='login_morador_page'),
-    path('buscar_encomendas/', BuscarEncomendas.as_view(), name='buscar_encomendas'),
+    path('api-token-auth/', obtain_auth_token),
+    path('buscar_encomendas/', app_meu_pacote_views.BuscarEncomendas.as_view(), name='buscar_encomendas'),
     path('api/', include(router.urls)),
-    # API ENCOMENDAS PAGE
-    #path('api/encomendas/' BuscarEncomenadas.as_view())
-    # view morador registro 
-    path('register/', register_morador, name='register_morador'),
+    path('register/', app_meu_pacote_views.register_morador, name='register_morador'),
     path('registro_sucesso/', app_meu_pacote_views.registro_sucesso, name='registro_sucesso'),
     path('admin/', admin.site.urls),
     path('', app_meu_pacote_views.index, name='index'),
@@ -68,7 +35,6 @@ urlpatterns = [
     path('login/', accounts_views.login_view, name='login_view'),
     path('signup/', accounts_views.signup_view, name='signup_view'),
     path('telainicial/', app_meu_pacote_views.encomenda, name='telainicial_url'),
-    #path('', include('meu_app.urls')),  # Inclui as URLs do seu aplicativo
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]

@@ -94,7 +94,7 @@ def register_morador(request):
                 apartamento=form.cleaned_data['apartamento']
             )
             morador.save()
-            return redirect('registro_sucesso.html')  # Ajuste para usar o nome correto da URL
+            return redirect('registro_sucesso')  # Ajuste para usar o nome correto da URL
     else:
         form = MoradorRegistrationForm()
     return render(request, 'register_morador.html', {'form': form})#renderizar views
